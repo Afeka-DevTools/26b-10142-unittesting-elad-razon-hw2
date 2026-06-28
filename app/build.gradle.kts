@@ -8,6 +8,9 @@
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     application
+
+    // JaCoCo is used to measure how much of App.java the unit tests actually cover.
+    jacoco
 }
 
 repositories {
@@ -40,4 +43,15 @@ application {
 tasks.named<Test>("test") {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
+
+    // Generate the coverage report automatically once the tests have run.
+    finalizedBy(tasks.named("jacocoTestReport"))
+}
+
+tasks.named<JacocoReport>("jacocoTestReport") {
+    dependsOn(tasks.named("test"))
+    reports {
+        html.required = true
+        csv.required = true
+    }
 }
